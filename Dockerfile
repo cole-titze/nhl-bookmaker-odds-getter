@@ -1,5 +1,5 @@
 # Get dotnet sdk
-FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine-arm64v8 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine-arm64v8 AS build-env
 WORKDIR /app
 
 # Running as root
@@ -10,7 +10,7 @@ COPY . ./
 RUN dotnet publish Entry --self-contained -r linux-musl-arm64 -p:PublishSingleFile=true -c Release -o ./deploy
 
 # Generate image
-FROM mcr.microsoft.com/dotnet/runtime-deps:6.0-alpine-arm64v8
+FROM mcr.microsoft.com/dotnet/runtime-deps:7.0-alpine-arm64v8
 WORKDIR /app
 
 # Running as root
