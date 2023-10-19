@@ -804,3 +804,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 appsettings.Local.json
+
+deploy
