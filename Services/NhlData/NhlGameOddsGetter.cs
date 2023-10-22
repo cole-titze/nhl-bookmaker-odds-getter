@@ -11,14 +11,13 @@ namespace Services.NhlData
         private readonly IRequestMaker _requestMaker;
         private readonly ApiSettings _settings;
         private readonly ILogger<NhlGameOddsGetter> _logger;
-        private readonly Dictionary<DateTime, dynamic> _gameResponseCache;
+        private dynamic? _futureGameResponseCache;
 
         public NhlGameOddsGetter(IRequestMaker reqMaker, ApiSettings apiSettings, ILoggerFactory loggerFactory)
 		{
             _requestMaker = reqMaker;
             _logger = loggerFactory.CreateLogger<NhlGameOddsGetter>();
             _settings = apiSettings;
-            _gameResponseCache = new Dictionary<DateTime, dynamic>();
         }
 
         /// <summary>
@@ -30,30 +29,22 @@ namespace Services.NhlData
         public async Task<DbGameOdds> GetGameOdds(DbGame game)
         {
             // TODO:
-            // Hit api once and cache for use - filter out games not in response
             // If the game date is in the past use the historical odds api
-            // If the game date is today or two days from today, get the odds once and cache for future games
-            // If the game date is later than two days from now, skip
-            // Parse game data and match by teams playing and date?
-
-            if (game.gameDate < DateTime.UtcNow)
-                return new DbGameOdds();
-
-            if (game.gameDate > DateTime.UtcNow.AddDays(2))
+            if (game.gameDate < DateTime.UtcNow || game.gameDate > DateTime.UtcNow.AddDays(2))
                 return new DbGameOdds();
 
             var gameOdds = await GetFutureGameOdds(game);
 
             return gameOdds;
         }
-        // Example query: https://api.the-odds-api.com/v4/sports/icehockey_nhl/odds/?bookmakers=draftkings,betmgm,bovada,barstool&commenceTimeFrom=2023-10-21T17:00:00Z&commenceTimeTo=2023-10-22T17:00:00Z&apiKey=
+        // Example query: https://api.the-odds-api.com/v4/sports/icehockey_nhl/odds/?bookmakers=draftkings,betmgm,bovada,barstool&apiKey=
         private async Task<DbGameOdds> GetFutureGameOdds(DbGame game)
         {
             string url = "https://api.the-odds-api.com/v4/sports/icehockey_nhl/odds/?";
             string query = GetGameQuery(game);
 
-            if(_gameResponseCache.ContainsKey(game.gameDate.Date))
-                return MapFutureGameOddsResponseToGameOdds.Map(game, _gameResponseCache[game.gameDate.Date]);
+            if(_futureGameResponseCache != null)
+                return MapFutureGameOddsResponseToGameOdds.Map(game, _futureGameResponseCache);
 
             var gameResponse = await _requestMaker.MakeRequest(url, query);
             if (gameResponse == null)
@@ -61,20 +52,18 @@ namespace Services.NhlData
                 _logger.LogWarning("Failed to get game with id: " + game.id.ToString());
                 return new DbGameOdds();
             }
-            _gameResponseCache.Add(game.gameDate.Date, gameResponse);
+            _futureGameResponseCache = gameResponse;
 
             return MapFutureGameOddsResponseToGameOdds.Map(game, gameResponse);
         }
         /// <summary>
         /// Creates the game query
         /// </summary>
-        /// <param name="id">Id of the game to get</param>
+        /// <param name="game">The game to make the query for</param>
         /// <returns>Game query string</returns>
         private string GetGameQuery(DbGame game)
         {
-            string startDate = game.gameDate.AddHours(-12).ToString("s", System.Globalization.CultureInfo.InvariantCulture) + "Z";
-            string endDate = game.gameDate.AddHours(+12).ToString("s", System.Globalization.CultureInfo.InvariantCulture) + "Z";
-            string urlParameters = $"&commenceTimeFrom={startDate}&commenceTimeTo={endDate}&bookmakers=draftkings,betmgm,bovada,barstool&apiKey=" + _settings.OddsApiKey;
+            string urlParameters = $"&bookmakers=draftkings,betmgm,bovada,barstool&apiKey=" + _settings.OddsApiKey;
 
             return urlParameters;
         }

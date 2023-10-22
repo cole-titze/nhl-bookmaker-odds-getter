@@ -12,6 +12,8 @@ namespace Services.NhlData.Mappers
             if(gameResponse == null)
                 return new DbGameOdds();
 
+
+            // TODO: Make nullable and continue if missing bookmaker
             var gameOdds = new DbGameOdds()
             {
                 gameId = game.id,
@@ -36,11 +38,22 @@ namespace Services.NhlData.Mappers
                 if (DateTime.Parse((string)gameResponse.commence_time) < DateTime.UtcNow)
                     continue;
 
-                if (Fuzz.Ratio(game.homeTeam.GetFullTeamName(), (string)gameResponse.home_team) >= .9 && Fuzz.Ratio(game.awayTeam.GetFullTeamName(), (string)gameResponse.away_team) >= .9)
+                if (hasSameTeams(game, gameResponse) && hasSameDate(game.gameDate, gameResponse))
                     return gameResponse;
             }
 
             return null;
+        }
+
+        private static bool hasSameDate(DateTime gameDate, dynamic gameResponse)
+        {
+            var utcVegasGameDate = DateTime.Parse((string)gameResponse.commence_time);
+            return utcVegasGameDate >= gameDate.AddHours(-2) && utcVegasGameDate <= gameDate.AddHours(2) ? true : false;
+        }
+
+        private static bool hasSameTeams(DbGame game, dynamic gameResponse)
+        {
+            return (Fuzz.Ratio(game.homeTeam.GetFullTeamName(), (string)gameResponse.home_team) >= .9 && Fuzz.Ratio(game.awayTeam.GetFullTeamName(), (string)gameResponse.away_team) >= .9) ? true : false;
         }
     }
 }
