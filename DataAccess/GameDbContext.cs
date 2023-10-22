@@ -10,6 +10,8 @@ namespace DataAccess
         {
             _connectionString = connectionString;
         }
+        public virtual DbSet<DbGame> Game { get; set; } = null!;
+        public virtual DbSet<DbTeam> Team { get; set; } = null!;
         public virtual DbSet<DbGameOdds> GameOdds { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

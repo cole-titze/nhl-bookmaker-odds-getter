@@ -10,8 +10,4 @@
     <None Remove="DbModels\" />
     <None Remove="Models\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DbModels\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
 </Project>

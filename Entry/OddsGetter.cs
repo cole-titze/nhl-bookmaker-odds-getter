@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using Services.RequestMaker;
 using Services.NhlData;
+using Entities.Models;
 
 namespace Entry
 {
@@ -18,7 +19,7 @@ namespace Entry
             _loggerFactory = loggerFactory;
             _logger = loggerFactory.CreateLogger<OddsGetter>();
         }
-        public async Task Main(string gamesConnectionString)
+        public async Task Main(string gamesConnectionString, ApiSettings apiSettings)
         {
             // Run Data Collection
             var watch = Stopwatch.StartNew();
@@ -28,7 +29,7 @@ namespace Entry
             var requestMaker = new RequestMaker(new HttpClientWrapper());
             var gameDbContext = new GameDbContext(gamesConnectionString);
             var gameOddsRepo = new GameOddsRepository(gameDbContext);
-            var nhlGameGetter = new NhlGameOddsGetter(requestMaker, _loggerFactory);
+            var nhlGameGetter = new NhlGameOddsGetter(requestMaker, apiSettings, _loggerFactory);
             var gameOddsGetter = new GameOddsGetter(gameOddsRepo, nhlGameGetter, _loggerFactory);
 
             var gameOdds = await gameOddsGetter.GetGameOdds();

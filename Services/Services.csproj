@@ -17,6 +17,7 @@
     <Folder Include="NhlData\Mappers\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FuzzySharp" Version="2.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
   </ItemGroup>

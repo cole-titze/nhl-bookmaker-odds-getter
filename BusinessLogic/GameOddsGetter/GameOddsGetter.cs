@@ -25,7 +25,10 @@ namespace BusinessLogic.GameOddsGetter
 
             foreach(var gameOdds in gamesOdds)
             {
-                var vegasGameOdds = await _nhlGameOddsGetter.GetGameOdds(gameOdds.gameId);
+                if (gameOdds.IsCalculated())
+                    continue;
+
+                var vegasGameOdds = await _nhlGameOddsGetter.GetGameOdds(gameOdds.game);
                 gameOdds.draftKingsHomeOdds = vegasGameOdds.draftKingsHomeOdds;
                 gameOdds.draftKingsAwayOdds = vegasGameOdds.draftKingsAwayOdds;
             }
