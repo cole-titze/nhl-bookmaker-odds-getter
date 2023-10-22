@@ -29,6 +29,8 @@ namespace Entities.DbModels
             bovadaAwayOdds = gameOdds.bovadaAwayOdds;
             betMgmHomeOdds = gameOdds.betMgmHomeOdds;
             betMgmAwayOdds = gameOdds.betMgmAwayOdds;
+            barstoolHomeOdds = gameOdds.barstoolHomeOdds;
+            barstoolAwayOdds = gameOdds.barstoolAwayOdds;
             modelHomeOdds = gameOdds.modelHomeOdds;
             modelAwayOdds = gameOdds.modelAwayOdds;
         }

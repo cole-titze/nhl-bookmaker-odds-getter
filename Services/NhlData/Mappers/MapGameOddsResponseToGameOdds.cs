@@ -36,7 +36,7 @@ namespace Services.NhlData.Mappers
                 if (DateTime.Parse((string)gameResponse.commence_time) < DateTime.UtcNow)
                     continue;
 
-                if (Fuzz.Ratio(game.homeTeam.GetFullTeamName(), (string)message.home_team) >= .9 && Fuzz.Ratio(game.awayTeam.GetFullTeamName(), message.away_team) >= .9)
+                if (Fuzz.Ratio(game.homeTeam.GetFullTeamName(), (string)gameResponse.home_team) >= .9 && Fuzz.Ratio(game.awayTeam.GetFullTeamName(), (string)gameResponse.away_team) >= .9)
                     return gameResponse;
             }
 

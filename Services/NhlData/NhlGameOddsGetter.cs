@@ -30,12 +30,16 @@ namespace Services.NhlData
         public async Task<DbGameOdds> GetGameOdds(DbGame game)
         {
             // TODO:
+            // Hit api once and cache for use - filter out games not in response
             // If the game date is in the past use the historical odds api
             // If the game date is today or two days from today, get the odds once and cache for future games
             // If the game date is later than two days from now, skip
             // Parse game data and match by teams playing and date?
 
             if (game.gameDate < DateTime.UtcNow)
+                return new DbGameOdds();
+
+            if (game.gameDate > DateTime.UtcNow.AddDays(2))
                 return new DbGameOdds();
 
             var gameOdds = await GetFutureGameOdds(game);
@@ -45,7 +49,7 @@ namespace Services.NhlData
         // Example query: https://api.the-odds-api.com/v4/sports/icehockey_nhl/odds/?bookmakers=draftkings,betmgm,bovada,barstool&commenceTimeFrom=2023-10-21T17:00:00Z&commenceTimeTo=2023-10-22T17:00:00Z&apiKey=
         private async Task<DbGameOdds> GetFutureGameOdds(DbGame game)
         {
-            string url = "https://api.the-odds-api.com/v4/sports/icehockey_nhl/odds/?regions=us";
+            string url = "https://api.the-odds-api.com/v4/sports/icehockey_nhl/odds/?";
             string query = GetGameQuery(game);
 
             if(_gameResponseCache.ContainsKey(game.gameDate.Date))

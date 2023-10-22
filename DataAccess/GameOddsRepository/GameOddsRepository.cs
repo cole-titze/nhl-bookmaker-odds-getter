@@ -17,7 +17,15 @@ namespace DataAccess.GameOddsRepository
         /// <returns></returns>
         public async Task UpdateGameOdds(IEnumerable<DbGameOdds> games)
         {
-            _dbContext.GameOdds.UpdateRange(games);
+            var gamesToUpdate = new List<DbGameOdds>();
+            foreach(var game in games)
+            {
+                var dbGame = _dbContext.GameOdds.First(x => x.gameId == game.gameId);
+                dbGame.Clone(game);
+                gamesToUpdate.Add(dbGame);
+            }
+
+            _dbContext.GameOdds.UpdateRange(gamesToUpdate);
             await _dbContext.SaveChangesAsync();
         }
         /// <summary>
@@ -26,7 +34,11 @@ namespace DataAccess.GameOddsRepository
         /// <returns>The season's game odds</returns>
         public async Task<IEnumerable<DbGameOdds>> GetGamesOdds()
         {
-            return await _dbContext.GameOdds.Include(x => x.game).ToListAsync();
+            return await _dbContext.GameOdds.Include(x => x.game)
+                                            .ThenInclude( g => g.homeTeam)
+                                            .Include(x => x.game)
+                                            .ThenInclude(g => g.awayTeam)
+                                            .ToListAsync();
         }
     }
 }

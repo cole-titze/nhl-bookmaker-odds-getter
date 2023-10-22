@@ -21,19 +21,22 @@ namespace BusinessLogic.GameOddsGetter
         /// </summary>
         public async Task<IEnumerable<DbGameOdds>> GetGameOdds()
         {
-            var gamesOdds = await _gameOddsRepo.GetGamesOdds();
+            var currentGamesOdds = await _gameOddsRepo.GetGamesOdds();
+            var updatedGameOdds = new List<DbGameOdds>();
 
-            foreach(var gameOdds in gamesOdds)
+            foreach(var gameOdds in currentGamesOdds)
             {
                 if (gameOdds.IsCalculated())
                     continue;
 
                 var vegasGameOdds = await _nhlGameOddsGetter.GetGameOdds(gameOdds.game);
-                gameOdds.draftKingsHomeOdds = vegasGameOdds.draftKingsHomeOdds;
-                gameOdds.draftKingsAwayOdds = vegasGameOdds.draftKingsAwayOdds;
+                if (vegasGameOdds.gameId == 0)
+                    continue;
+
+                updatedGameOdds.Add(vegasGameOdds);
             }
 
-            return gamesOdds;
+            return updatedGameOdds;
         }
     }
 }
