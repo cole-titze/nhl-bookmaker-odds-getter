@@ -35,7 +35,7 @@ namespace BusinessLogic.GameOddsGetter
 
                 updatedGameOdds.Add(vegasGameOdds);
             }
-
+            _logger.LogInformation("Number of Game Odds To Add: " + updatedGameOdds.Count.ToString());
             return updatedGameOdds;
         }
     }

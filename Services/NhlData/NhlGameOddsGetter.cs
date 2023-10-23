@@ -61,6 +61,7 @@ namespace Services.NhlData
             if (_pastGameResponseCache.ContainsKey(game.gameDate.Date))
                 return MapGameOddsResponseToGameOdds.MapPastGame(game, _pastGameResponseCache);
 
+            _logger.LogInformation("Calling Odds API...");
             var gameResponse = await _requestMaker.MakeRequest(url, query);
             if (gameResponse == null)
             {
@@ -86,6 +87,7 @@ namespace Services.NhlData
             if(_futureGameResponseCache != null)
                 return MapGameOddsResponseToGameOdds.MapFutureGame(game, _futureGameResponseCache);
 
+            _logger.LogInformation("Calling Odds API...");
             var gameResponse = await _requestMaker.MakeRequest(url, query);
             if (gameResponse == null)
             {
