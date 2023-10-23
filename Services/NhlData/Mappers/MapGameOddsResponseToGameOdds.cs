@@ -3,13 +3,50 @@ using FuzzySharp;
 
 namespace Services.NhlData.Mappers
 {
-	public static class MapFutureGameOddsResponseToGameOdds
+	public static class MapGameOddsResponseToGameOdds
 	{
-        public static DbGameOdds Map(DbGame game, dynamic message)
+        public static DbGameOdds MapFutureGame(DbGame game, dynamic message)
         {
             var gameResponse = GetGameFromResponse(game, message);
 
             if(gameResponse == null)
+                return new DbGameOdds();
+
+            var gameOdds = new DbGameOdds()
+            {
+                gameId = game.id,
+            };
+            foreach(var bookmaker in gameResponse.bookmakers)
+            {
+                switch ((string)bookmaker.key)
+                {
+                    case "betmgm":
+                        gameOdds.betMgmHomeOdds = (double)bookmaker.markets[0].outcomes[0].price;
+                        gameOdds.betMgmAwayOdds = (double)bookmaker.markets[0].outcomes[1].price;
+                        break;
+                    case "bovada":
+                        gameOdds.bovadaHomeOdds = (double)bookmaker.markets[0].outcomes[0].price;
+                        gameOdds.bovadaAwayOdds = (double)bookmaker.markets[0].outcomes[1].price;
+                        break;
+                    case "barstool":
+                        gameOdds.barstoolHomeOdds = (double)bookmaker.markets[0].outcomes[0].price;
+                        gameOdds.barstoolAwayOdds = (double)bookmaker.markets[0].outcomes[1].price;
+                        break;
+                    case "draftkings":
+                        gameOdds.draftKingsHomeOdds = (double)bookmaker.markets[0].outcomes[0].price;
+                        gameOdds.draftKingsAwayOdds = (double)bookmaker.markets[0].outcomes[1].price;
+                        break;
+                }
+            }
+
+            return gameOdds;
+        }
+
+        public static DbGameOdds MapPastGame(DbGame game, Dictionary<DateTime, dynamic?> message)
+        {
+            var gameResponse = GetGameFromResponse(game, message);
+
+            if (gameResponse == null)
                 return new DbGameOdds();
 
 
@@ -29,6 +66,7 @@ namespace Services.NhlData.Mappers
 
             return gameOdds;
         }
+
 
         private static dynamic? GetGameFromResponse(DbGame game, dynamic message)
         {

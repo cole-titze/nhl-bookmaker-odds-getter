@@ -20,7 +20,7 @@ namespace Entities.DbModels
         [ForeignKey("gameId")]
         public DbGame game { get; set; } = null!;
 
-        public void Clone(DbGameOdds gameOdds)
+        public void CloneWithoutModelOdds(DbGameOdds gameOdds)
         {
             gameId = gameOdds.gameId;
             draftKingsHomeOdds = gameOdds.draftKingsHomeOdds;
@@ -31,8 +31,6 @@ namespace Entities.DbModels
             betMgmAwayOdds = gameOdds.betMgmAwayOdds;
             barstoolHomeOdds = gameOdds.barstoolHomeOdds;
             barstoolAwayOdds = gameOdds.barstoolAwayOdds;
-            modelHomeOdds = gameOdds.modelHomeOdds;
-            modelAwayOdds = gameOdds.modelAwayOdds;
         }
 
         public bool IsCalculated()
