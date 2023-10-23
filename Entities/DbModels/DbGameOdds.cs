@@ -20,7 +20,7 @@ namespace Entities.DbModels
         [ForeignKey("gameId")]
         public DbGame game { get; set; } = null!;
 
-        public void CloneWithoutModelOdds(DbGameOdds gameOdds)
+        public void Clone(DbGameOdds gameOdds)
         {
             gameId = gameOdds.gameId;
             draftKingsHomeOdds = gameOdds.draftKingsHomeOdds;
