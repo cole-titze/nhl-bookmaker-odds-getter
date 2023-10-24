@@ -20,7 +20,7 @@ using (var scope = sp.CreateScope())
 {
     ApiSettings oddsApiSettings = new ApiSettings();
     string? gamesConnectionString = Environment.GetEnvironmentVariable("NHL_DATABASE");
-    oddsApiSettings.OddsApiKey = Environment.GetEnvironmentVariable("OddsApiKey");
+    oddsApiSettings.OddsApiKey = Environment.GetEnvironmentVariable("ODDS_API_KEY");
 
     if (gamesConnectionString == null)
     {
@@ -30,7 +30,7 @@ using (var scope = sp.CreateScope())
     if (oddsApiSettings.OddsApiKey == null)
     {
         var config = new ConfigurationBuilder().AddJsonFile("appsettings.Local.json").Build();
-        oddsApiSettings.OddsApiKey = config.GetValue<string>("ApiSettings:OddsApiKey");
+        oddsApiSettings.OddsApiKey = config.GetValue<string>("ApiSettings:ODDS_API_KEY");
     }
 
     if (gamesConnectionString == null)
