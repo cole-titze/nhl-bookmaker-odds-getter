@@ -21,20 +21,52 @@ namespace Services.NhlData.Mappers
                 switch ((string)bookmaker.key)
                 {
                     case "betmgm":
-                        gameOdds.betMgmHomeOdds = 1/(double)bookmaker.markets[0].outcomes[0].price;
-                        gameOdds.betMgmAwayOdds = 1/(double)bookmaker.markets[0].outcomes[1].price;
+                        if(Fuzz.Ratio(game.homeTeam.GetFullTeamName(), (string)bookmaker.markets[0].outcomes[0].name) >= 90)
+                        {
+                            gameOdds.betMgmHomeOdds = 1 / (double)bookmaker.markets[0].outcomes[0].price;
+                            gameOdds.betMgmAwayOdds = 1 / (double)bookmaker.markets[0].outcomes[1].price;
+                        }
+                        else
+                        {
+                            gameOdds.betMgmAwayOdds = 1 / (double)bookmaker.markets[0].outcomes[0].price;
+                            gameOdds.betMgmHomeOdds = 1 / (double)bookmaker.markets[0].outcomes[1].price;
+                        }
                         break;
                     case "bovada":
-                        gameOdds.bovadaHomeOdds = 1/(double)bookmaker.markets[0].outcomes[0].price;
-                        gameOdds.bovadaAwayOdds = 1/(double)bookmaker.markets[0].outcomes[1].price;
+                        if (Fuzz.Ratio(game.homeTeam.GetFullTeamName(), (string)bookmaker.markets[0].outcomes[0].name) >= 90)
+                        {
+                            gameOdds.bovadaHomeOdds = 1 / (double)bookmaker.markets[0].outcomes[0].price;
+                            gameOdds.bovadaAwayOdds = 1 / (double)bookmaker.markets[0].outcomes[1].price;
+                        }
+                        else
+                        {
+                            gameOdds.bovadaAwayOdds = 1 / (double)bookmaker.markets[0].outcomes[0].price;
+                            gameOdds.bovadaHomeOdds = 1 / (double)bookmaker.markets[0].outcomes[1].price;
+                        }
                         break;
                     case "barstool":
-                        gameOdds.barstoolHomeOdds = 1/(double)bookmaker.markets[0].outcomes[0].price;
-                        gameOdds.barstoolAwayOdds = 1/(double)bookmaker.markets[0].outcomes[1].price;
+                        if (Fuzz.Ratio(game.homeTeam.GetFullTeamName(), (string)bookmaker.markets[0].outcomes[0].name) >= 90)
+                        {
+                            gameOdds.barstoolHomeOdds = 1 / (double)bookmaker.markets[0].outcomes[0].price;
+                            gameOdds.barstoolAwayOdds = 1 / (double)bookmaker.markets[0].outcomes[1].price;
+                        }
+                        else
+                        {
+                            gameOdds.barstoolAwayOdds = 1 / (double)bookmaker.markets[0].outcomes[0].price;
+                            gameOdds.barstoolHomeOdds = 1 / (double)bookmaker.markets[0].outcomes[1].price;
+                        }
                         break;
                     case "draftkings":
-                        gameOdds.draftKingsHomeOdds = 1/(double)bookmaker.markets[0].outcomes[0].price;
-                        gameOdds.draftKingsAwayOdds = 1/(double)bookmaker.markets[0].outcomes[1].price;
+                        if (Fuzz.Ratio(game.homeTeam.GetFullTeamName(), (string)bookmaker.markets[0].outcomes[0].name) >= 90)
+                        {
+                            gameOdds.draftKingsHomeOdds = 1 / (double)bookmaker.markets[0].outcomes[0].price;
+                            gameOdds.draftKingsAwayOdds = 1 / (double)bookmaker.markets[0].outcomes[1].price;
+                        }
+                        else
+                        {
+                            gameOdds.draftKingsAwayOdds = 1 / (double)bookmaker.markets[0].outcomes[0].price;
+                            gameOdds.draftKingsHomeOdds = 1 / (double)bookmaker.markets[0].outcomes[1].price;
+                        }
                         break;
                 }
             }
