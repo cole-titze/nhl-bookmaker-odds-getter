@@ -21,20 +21,20 @@ namespace Services.NhlData.Mappers
                 switch ((string)bookmaker.key)
                 {
                     case "betmgm":
-                        gameOdds.betMgmHomeOdds = (double)bookmaker.markets[0].outcomes[0].price;
-                        gameOdds.betMgmAwayOdds = (double)bookmaker.markets[0].outcomes[1].price;
+                        gameOdds.betMgmHomeOdds = 1/(double)bookmaker.markets[0].outcomes[0].price;
+                        gameOdds.betMgmAwayOdds = 1/(double)bookmaker.markets[0].outcomes[1].price;
                         break;
                     case "bovada":
-                        gameOdds.bovadaHomeOdds = (double)bookmaker.markets[0].outcomes[0].price;
-                        gameOdds.bovadaAwayOdds = (double)bookmaker.markets[0].outcomes[1].price;
+                        gameOdds.bovadaHomeOdds = 1/(double)bookmaker.markets[0].outcomes[0].price;
+                        gameOdds.bovadaAwayOdds = 1/(double)bookmaker.markets[0].outcomes[1].price;
                         break;
                     case "barstool":
-                        gameOdds.barstoolHomeOdds = (double)bookmaker.markets[0].outcomes[0].price;
-                        gameOdds.barstoolAwayOdds = (double)bookmaker.markets[0].outcomes[1].price;
+                        gameOdds.barstoolHomeOdds = 1/(double)bookmaker.markets[0].outcomes[0].price;
+                        gameOdds.barstoolAwayOdds = 1/(double)bookmaker.markets[0].outcomes[1].price;
                         break;
                     case "draftkings":
-                        gameOdds.draftKingsHomeOdds = (double)bookmaker.markets[0].outcomes[0].price;
-                        gameOdds.draftKingsAwayOdds = (double)bookmaker.markets[0].outcomes[1].price;
+                        gameOdds.draftKingsHomeOdds = 1/(double)bookmaker.markets[0].outcomes[0].price;
+                        gameOdds.draftKingsAwayOdds = 1/(double)bookmaker.markets[0].outcomes[1].price;
                         break;
                 }
             }
