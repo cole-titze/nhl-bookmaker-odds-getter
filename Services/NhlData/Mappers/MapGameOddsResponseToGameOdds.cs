@@ -91,7 +91,7 @@ namespace Services.NhlData.Mappers
 
         private static bool hasSameTeams(DbGame game, dynamic gameResponse)
         {
-            return (Fuzz.Ratio(game.homeTeam.GetFullTeamName(), (string)gameResponse.home_team) >= .9 && Fuzz.Ratio(game.awayTeam.GetFullTeamName(), (string)gameResponse.away_team) >= .9) ? true : false;
+            return (Fuzz.Ratio(game.homeTeam.GetFullTeamName(), (string)gameResponse.home_team) >= 90 && Fuzz.Ratio(game.awayTeam.GetFullTeamName(), (string)gameResponse.away_team) >= 90) ? true : false;
         }
     }
 }
